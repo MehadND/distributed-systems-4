@@ -39,4 +39,15 @@ public enum BookDAO {
 	public Book getBook(int id) {
 		return booksMap.get(id);
 	}
+	
+	public void createBook(Book book)
+	{
+		booksMap.put(book.getId(), book);
+	}
+	
+	public void deleteBook(int id)
+	{
+		System.out.println("Get Delete Book --> "+booksMap.get(id));
+		booksMap.remove(id);
+	}
 }
