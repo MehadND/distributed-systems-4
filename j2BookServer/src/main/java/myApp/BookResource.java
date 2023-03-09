@@ -61,4 +61,11 @@ public class BookResource {
 		BookDAO.instance.deleteBook(Integer.parseInt(id));
 		
 	}
+	
+	@Path("test")
+	@GET
+	@Produces( {MediaType.TEXT_PLAIN} )
+	public String testDBGetBooks(){
+		return BookDAO.instance.testDB();
+	}
 }

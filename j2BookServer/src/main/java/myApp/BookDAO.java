@@ -1,5 +1,10 @@
 package myApp;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,5 +54,41 @@ public enum BookDAO {
 	{
 		System.out.println("Get Delete Book --> "+booksMap.get(id));
 		booksMap.remove(id);
+	}
+	
+	public String testDB()
+	{
+		String name = null;
+		StringBuilder sb = new StringBuilder();
+		
+		Connection connection = null;
+		
+		try {
+			//driver
+			Class.forName("org.hsqldb.jdbcDriver");
+		
+			//connector
+			connection = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost/oneDB", "SA", "Passw0rd");
+			
+			//statement
+			Statement statement = connection.createStatement();
+			
+			//resultSet
+			ResultSet resultSet = statement.executeQuery("select * from user;");
+			
+			while(resultSet.next())
+			{
+				sb.append(resultSet.getString("name")).append("\n");
+			}
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return sb.toString();
 	}
 }
