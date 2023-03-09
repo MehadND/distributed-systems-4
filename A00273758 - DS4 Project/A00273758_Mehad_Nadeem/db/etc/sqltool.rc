@@ -1,0 +1,11 @@
+
+			urlid oneDB
+			url jdbc:hsqldb:hsql://localhost/oneDB;ifexists=true
+			username SA
+			password Passw0rd
+
+			urlid create
+			url jdbc:hsqldb:file:data/oneDB;create=true
+			username SA
+			password Passw0rd
+		
