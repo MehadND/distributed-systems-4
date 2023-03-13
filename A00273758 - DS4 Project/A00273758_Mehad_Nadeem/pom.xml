@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>A00273758_Mehad_Nadeem</groupId>
-  <artifactId>A00273758_Mehad_Nadeem</artifactId>
+  <groupId>ds4.project</groupId>
+  <artifactId>a00273758.mehadnadeem</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
   <build>
@@ -19,4 +19,61 @@
       </plugin>
     </plugins>
   </build>
+  
+  <dependencies>
+		<!-- https://mvnrepository.com/artifact/org.apache.activemq/activemq-all -->
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-all</artifactId>
+			<version>5.17.4</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.20.0</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.20.0</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.2</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-xml -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-xml</artifactId>
+			<version>2.14.2</version>
+		</dependency>
+
+<!--  https://mvnrepository.com/artifact/org.apache.httpcomponents/httpcore  -->
+<dependency>
+<groupId>org.apache.httpcomponents</groupId>
+<artifactId>httpcore</artifactId>
+<version>4.4.13</version>
+</dependency>
+<!--  https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient  -->
+<dependency>
+<groupId>org.apache.httpcomponents</groupId>
+<artifactId>httpclient</artifactId>
+<version>4.5.12</version>
+</dependency>
+<!--  https://mvnrepository.com/artifact/net.sf.kxml/kxml2  -->
+<dependency>
+<groupId>net.sf.kxml</groupId>
+<artifactId>kxml2</artifactId>
+<version>2.3.0</version>
+</dependency>
+	</dependencies>
+  
 </project>
