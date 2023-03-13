@@ -16,6 +16,9 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -25,24 +28,32 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.plaf.basic.BasicBorders;
+import javax.swing.table.DefaultTableModel;
 import javax.ws.rs.FormParam;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.w3c.dom.Entity;
 
 import com.sun.jersey.api.representation.Form;
 
@@ -54,8 +65,6 @@ public class PlayerGUI extends JFrame implements ActionListener {
 
 	private JLabel viewPlayersLabel = new JLabel("List of All Players");
 	private JTextArea viewPlayersTextArea = new JTextArea(10, 1);
-
-	JPanel viewPanel = new JPanel();
 
 	// input fields + labels
 	private JLabel playerIDLabel = new JLabel("Player ID: ");
@@ -87,6 +96,14 @@ public class PlayerGUI extends JFrame implements ActionListener {
 	private JButton deletePlayerByIDButton = new JButton("Delete Player By ID");
 
 	private JPanel crudButtonsPanel = new JPanel();
+	
+	String[] columnNames = {"ID", "Name", "Age", "Gender", "Nationality", "Club", "App", "Goals", "Assists"};
+	DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+	
+	JTable table;
+	JScrollPane scrollPane;
+	
+	JPanel dbPanel = new JPanel();
 
 	public PlayerGUI() {
 		this.setTitle("A00273758_Mehad_Nadeem - DS4 Project");
@@ -99,17 +116,29 @@ public class PlayerGUI extends JFrame implements ActionListener {
 
 	public void gui_init() {
 
+		table = new JTable(tableModel);
+		scrollPane = new JScrollPane(table);
+		scrollPane.setPreferredSize(new Dimension(400,250));
+		refreshDB();
+		dbPanel.add(scrollPane);
 		crudButtonsPanel();
-		tablePanel();
 		inputFieldsPanel();
 
 		// contentPane.add(viewPanel, BorderLayout.EAST);
 		// contentPane.add(inputFieldsPanel, BorderLayout.WEST);
 		contentPane.add(inputFieldsPanel);
+		crudButtonsPanel.add(dbPanel);
 		contentPane.add(crudButtonsPanel);
-		contentPane.add(viewPanel);
 
 		this.setVisible(true);
+	}
+	
+	public void refreshDB()
+	{
+		tableModel.setRowCount(0);
+
+		PlayerDAO.instance.showTable(tableModel);
+
 	}
 
 	public void crudButtonsPanel() {
@@ -135,26 +164,19 @@ public class PlayerGUI extends JFrame implements ActionListener {
 		crudButtonsPanel.add(deletePlayerByIDButton);
 
 //		GridLayout crudPanelLayout = new GridLayout(5, 1);
-		crudButtonsPanel.setLayout(new BoxLayout(crudButtonsPanel, BoxLayout.Y_AXIS));
+		//crudButtonsPanel.setLayout(new BoxLayout(crudButtonsPanel, BoxLayout.Y_AXIS));
 		// crudButtonsPanel.setAlignmentY(CENTER_ALIGNMENT);
 
 		// crudButtonsPanel.setBorder(new EmptyBorder(250, 100, 0, 0));
 
 		crudButtonsPanel.setVisible(true);
 	}
-
-	public void tablePanel() {
-		viewPlayersTextArea.setLineWrap(true);
-
-		viewPanel.setLayout(new BoxLayout(viewPanel, BoxLayout.Y_AXIS));
-		viewPanel.add(viewPlayersButton);
-		viewPanel.add(viewPlayersLabel);
-		viewPanel.add(viewPlayersTextArea);
-
-		viewPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
-	}
+	
 
 	public void inputFieldsPanel() {
+		
+		debuggerOutpuTextArea.setEditable(false);
+		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		inputFieldsPanel.setLayout(gridBagLayout);
 		GridBagConstraints constraints = new GridBagConstraints();
@@ -307,7 +329,7 @@ public class PlayerGUI extends JFrame implements ActionListener {
 		}
 	}
 
-	public void printPlayerByID(int id) {
+	public void viewPlayerByID(int id) {
 		CloseableHttpClient httpClient = null;
 		CloseableHttpResponse httpResponse = null;
 
@@ -330,7 +352,7 @@ public class PlayerGUI extends JFrame implements ActionListener {
 			text = EntityUtils.toString(entity);
 
 			debuggerOutpuTextArea.setText(debugLine + "Getting Player By ID #" + id + "...");
-			viewPlayersTextArea.setText(text);
+			//viewPlayersTextArea.setText(text);
 
 		} catch (Exception ex) {
 			viewPlayersTextArea.setText(ex.getMessage());
@@ -362,6 +384,7 @@ public class PlayerGUI extends JFrame implements ActionListener {
 
 			debuggerOutpuTextArea.setText(debugLine + "Deleting Player By ID #" + id + "...");
 			viewPlayersTextArea.setText(text);
+			tableModel.fireTableDataChanged();
 
 		} catch (Exception ex) {
 			viewPlayersTextArea.setText(ex.getMessage());
@@ -378,23 +401,35 @@ public class PlayerGUI extends JFrame implements ActionListener {
 					.setPath("/a00273758.mehadnadeem/rest/players/create").build();
 
 			// System.out.println(uri.toString());
-
+		
 			HttpPost httpPost = new HttpPost(uri);
 			httpPost.setHeader("Accept", "text/plain");
 			
-			Form f = new Form();
-			
-			f.add("name", nameTextField.getText());
-			f.add("age", Integer.parseInt(ageTextField.getText()));
-			f.add("gender", genderTextField.getText().charAt(0));
-			f.add("nationality", nationalityTextField.getText());
-			f.add("club", clubTextField.getText());
-			f.add("app", Integer.parseInt(appearancesTextField.getText()));
-			f.add("goals", Integer.parseInt(goalsTextField.getText()));
-			f.add("assists", Integer.parseInt(assistsTextField.getText()));
-			
+//			Form f = new Form();
+//			
+//			f.add("name", nameTextField.getText());
+//			f.add("age", Integer.parseInt(ageTextField.getText()));
+//			f.add("gender", genderTextField.getText().charAt(0));
+//			f.add("nationality", nationalityTextField.getText());
+//			f.add("club", clubTextField.getText());
+//			f.add("app", Integer.parseInt(appearancesTextField.getText()));
+//			f.add("goals", Integer.parseInt(goalsTextField.getText()));
+//			f.add("assists", Integer.parseInt(assistsTextField.getText()));
 
-			httpClient = HttpClients.createDefault();
+			List<NameValuePair> params = new ArrayList<>();
+			params.add(new BasicNameValuePair("player_id",  null));
+	        params.add(new BasicNameValuePair("name",  nameTextField.getText()));
+	        params.add(new BasicNameValuePair("age", ageTextField.getText()));
+	        params.add(new BasicNameValuePair("gender", genderTextField.getText()));
+	        params.add(new BasicNameValuePair("nationality", nationalityTextField.getText()));
+	        params.add(new BasicNameValuePair("club", clubTextField.getText()));
+	        params.add(new BasicNameValuePair("appearances", appearancesTextField.getText()));
+	        params.add(new BasicNameValuePair("goals", goalsTextField.getText()));
+	        params.add(new BasicNameValuePair("assists", assistsTextField.getText()));
+
+	        httpPost.setEntity(new UrlEncodedFormEntity(params, StandardCharsets.UTF_8));
+			
+	        httpClient = HttpClients.createDefault();
 			httpResponse = httpClient.execute(httpPost);
 
 			String text;
@@ -403,41 +438,64 @@ public class PlayerGUI extends JFrame implements ActionListener {
 
 			text = EntityUtils.toString(entity);
 
-			debuggerOutpuTextArea.setText(debugLine + "Creating Player...");
+			debuggerOutpuTextArea.setText(debugLine + "Created Player..."+nameTextField.getText());
 			viewPlayersTextArea.setText(text);
+			tableModel.fireTableDataChanged();
 
 		} catch (Exception ex) {
 			viewPlayersTextArea.setText(ex.getMessage());
 			ex.printStackTrace();
 		}
 	}
-
+	
+	
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == viewPlayersButton) {
-			printAllPlayers();
-		}
-		if (e.getSource() == viewPlayerByIDButton) {
-			if (playerIDTextField.getText() == null || playerIDTextField.getText().isBlank()
-					|| playerIDTextField.getText().isEmpty()) {
-				JOptionPane.showMessageDialog(null, "Please enter a Player ID!");
-			} else {
-				printPlayerByID(Integer.parseInt(playerIDTextField.getText()));
-			}
-		}
+		
+//		if (e.getSource() == viewPlayersButton) {
+//			printAllPlayers();
+//		}
+//		if (e.getSource() == viewPlayerByIDButton) {
+//			if (playerIDTextField.getText() == null || playerIDTextField.getText().isBlank()
+//					|| playerIDTextField.getText().isEmpty()) {
+//				JOptionPane.showMessageDialog(null, "Please enter a Player ID!");
+//			} else {
+//				viewPlayerByID(Integer.parseInt(playerIDTextField.getText()));
+//			}
+//		}
 		if (e.getSource() == deletePlayerByIDButton) {
 			if (playerIDTextField.getText() == null || playerIDTextField.getText().isBlank()
 					|| playerIDTextField.getText().isEmpty()) {
 				JOptionPane.showMessageDialog(null, "Please enter a Player ID!");
 			} else {
 				deletePlayerByID(Integer.parseInt(playerIDTextField.getText()));
+				refreshDB();
 			}
 		}
 		if(e.getSource() == createPlayerButton)
 		{
 			createPlayer();
+			refreshDB();
 		}
 
+	}
+	
+	public void clearInputFields()
+	{
+		playerIDTextField.setText("");
+		nameTextField.setText("");
+		ageTextField.setText("");
+		genderTextField.setText("");
+		nationalityTextField.setText("");
+		clubTextField.setText("");
+		appearancesTextField.setText("");
+		goalsTextField.setText("");
+		assistsTextField.setText("");
+		
+		viewPlayersTextArea.setText("");
+		
+		debuggerOutpuTextArea.setText("");
 	}
 
 	public JTextArea getDebuggerOutpuTextArea() {
@@ -446,10 +504,6 @@ public class PlayerGUI extends JFrame implements ActionListener {
 
 	public JTextArea getViewPlayersTextArea() {
 		return viewPlayersTextArea;
-	}
-
-	public JPanel getViewPanel() {
-		return viewPanel;
 	}
 
 	public JTextField getPlayerIDTextField() {
@@ -516,16 +570,52 @@ public class PlayerGUI extends JFrame implements ActionListener {
 		return crudButtonsPanel;
 	}
 
+	public String[] getColumnNames() {
+		return columnNames;
+	}
+
+	public DefaultTableModel getTableModel() {
+		return tableModel;
+	}
+
+	public JTable getTable() {
+		return table;
+	}
+
+	public JScrollPane getScrollPane() {
+		return scrollPane;
+	}
+
+	public JPanel getDbPanel() {
+		return dbPanel;
+	}
+
+	public void setColumnNames(String[] columnNames) {
+		this.columnNames = columnNames;
+	}
+
+	public void setTableModel(DefaultTableModel tableModel) {
+		this.tableModel = tableModel;
+	}
+
+	public void setTable(JTable table) {
+		this.table = table;
+	}
+
+	public void setScrollPane(JScrollPane scrollPane) {
+		this.scrollPane = scrollPane;
+	}
+
+	public void setDbPanel(JPanel dbPanel) {
+		this.dbPanel = dbPanel;
+	}
+
 	public void setDebuggerOutpuTextArea(JTextArea debuggerOutpuTextArea) {
 		this.debuggerOutpuTextArea = debuggerOutpuTextArea;
 	}
 
 	public void setViewPlayersTextArea(JTextArea viewPlayersTextArea) {
 		this.viewPlayersTextArea = viewPlayersTextArea;
-	}
-
-	public void setViewPanel(JPanel viewPanel) {
-		this.viewPanel = viewPanel;
 	}
 
 	public void setPlayerIDTextField(JTextField playerIDTextField) {

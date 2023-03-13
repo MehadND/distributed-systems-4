@@ -45,7 +45,7 @@ public class PlayerResources {
 	@Path("/create")
 	public void createPlayer(@FormParam("name") String name, @FormParam("age") String age,
 			@FormParam("gender") String gender, @FormParam("nationality") String nationality,
-			@FormParam("club") String club, @FormParam("app") String app, @FormParam("goals") String goals,
+			@FormParam("club") String club, @FormParam("appearances") String app, @FormParam("goals") String goals,
 			@FormParam("assists") String assists, @Context HttpServletResponse servletResponse) {
 
 		Player player = new Player();
