@@ -1,26 +1,28 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>ds4.project</groupId>
-  <artifactId>a00273758.mehadnadeem</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>war</packaging>
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
-        <configuration>
-          <release>13</release>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>3.2.3</version>
-      </plugin>
-    </plugins>
-  </build>
-  
-  <dependencies>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>ds4.project</groupId>
+	<artifactId>a00273758.mehadnadeem</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<release>13</release>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.2.3</version>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
 		<!-- https://mvnrepository.com/artifact/org.apache.activemq/activemq-all -->
 		<dependency>
 			<groupId>org.apache.activemq</groupId>
@@ -56,24 +58,30 @@
 			<version>2.14.2</version>
 		</dependency>
 
-<!--  https://mvnrepository.com/artifact/org.apache.httpcomponents/httpcore  -->
-<dependency>
-<groupId>org.apache.httpcomponents</groupId>
-<artifactId>httpcore</artifactId>
-<version>4.4.13</version>
-</dependency>
-<!--  https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient  -->
-<dependency>
-<groupId>org.apache.httpcomponents</groupId>
-<artifactId>httpclient</artifactId>
-<version>4.5.12</version>
-</dependency>
-<!--  https://mvnrepository.com/artifact/net.sf.kxml/kxml2  -->
-<dependency>
-<groupId>net.sf.kxml</groupId>
-<artifactId>kxml2</artifactId>
-<version>2.3.0</version>
-</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpcore -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>4.4.13</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.12</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/net.sf.kxml/kxml2 -->
+		<dependency>
+			<groupId>net.sf.kxml</groupId>
+			<artifactId>kxml2</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-server</artifactId>
+			<version>1.8</version>
+		</dependency>
 	</dependencies>
-  
+
 </project>

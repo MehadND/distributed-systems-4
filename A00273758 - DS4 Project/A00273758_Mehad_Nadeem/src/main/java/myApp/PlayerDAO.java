@@ -41,6 +41,26 @@ public enum PlayerDAO
 		}
 	}
 	
+	public void deletePlayerbyID(int id)
+	{
+		db_init();
+		
+		try {
+
+			//statement
+			statement = connection.createStatement();
+			
+			//resultSet
+			statement.executeUpdate("delete from players where player_id = "+id+";");
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			db_close();
+		}
+	}
+	
 	public String viewAllPlayers()
 	{
 		StringBuilder sb = new StringBuilder();
