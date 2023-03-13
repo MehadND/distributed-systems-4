@@ -5,27 +5,31 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "book")
 
-@XmlType(propOrder = {"player_id", "firstName", "lastName", "age", "gender", "club", "appearances", "goals", "assists"} )
+@XmlType(propOrder = {"player_id", "name", "age", "gender", "nationality", "club", "appearances", "goals", "assists"} )
 public class Player 
 {
-	private int player_id;
-	private String firstName, lastName;
+	private int player_id, age;
+	private String name;
 	private char gender;
-	private String club;
+	private String nationality, club;
 	private int appearances, goals, assists;
+	
 	
 	
 	public int getPlayer_id() {
 		return player_id;
 	}
-	public String getFirstName() {
-		return firstName;
+	public int getAge() {
+		return age;
 	}
-	public String getLastName() {
-		return lastName;
+	public String getName() {
+		return name;
 	}
 	public char getGender() {
 		return gender;
+	}
+	public String getNationality() {
+		return nationality;
 	}
 	public String getClub() {
 		return club;
@@ -42,14 +46,17 @@ public class Player
 	public void setPlayer_id(int player_id) {
 		this.player_id = player_id;
 	}
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+	public void setAge(int age) {
+		this.age = age;
 	}
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+	public void setName(String name) {
+		this.name = name;
 	}
 	public void setGender(char gender) {
 		this.gender = gender;
+	}
+	public void setNationality(String nationality) {
+		this.nationality = nationality;
 	}
 	public void setClub(String club) {
 		this.club = club;
@@ -63,6 +70,8 @@ public class Player
 	public void setAssists(int assists) {
 		this.assists = assists;
 	}
+	
+	
 	
 	
 }
