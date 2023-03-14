@@ -1,5 +1,7 @@
 package player_rest;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -20,16 +22,23 @@ public class PlayerResources {
 	
 	//----------VIEW FUNCTIONALITY----------\\
 	@GET
-	@Produces({ MediaType.TEXT_PLAIN })
+	@Produces( {MediaType.APPLICATION_XML} )
 	@Path("/view/all")
-	public String getAllPlayers() {
+	public List<Player> getPlayers(){
 		return PlayerDAO.instance.viewAllPlayers();
 	}
 	
+//	@GET
+//	@Produces({ MediaType.TEXT_PLAIN })
+//	@Path("/view/all")
+//	public String getAllPlayers() {
+//		return PlayerDAO.instance.viewAllPlayers();
+//	}
+	
 	@GET
-	@Produces({ MediaType.TEXT_PLAIN })
+	@Produces( {MediaType.APPLICATION_XML} )
 	@Path("/view/{player_id}")
-	public String getPlayerByID(@PathParam("player_id") String id) {
+	public Player getPlayerByID(@PathParam("player_id") String id) {
 		return PlayerDAO.instance.viewPlayerByID(Integer.parseInt(id));
 	}
 

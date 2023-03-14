@@ -59,6 +59,7 @@ public class PlayerController implements ActionListener, MouseListener {
 		}
 		if (e.getSource() == view.getViewPlayerByIDButton()) {
 			System.out.println("getViewPlayerByIDButton Clicked!");
+			viewPlayerByID(Integer.parseInt(view.getPlayerIDTextField().getText()));
 		}
 		if (e.getSource() == view.getUpdatePlayerButton()) {
 			System.out.println("getUpdatePlayerButton Clicked!");
@@ -171,7 +172,7 @@ public class PlayerController implements ActionListener, MouseListener {
 		}
 	}
 
-	public void viewPlayerAll() {	
+	public void viewPlayerAll() {
 		CloseableHttpClient httpClient = null;
 		CloseableHttpResponse httpResponse = null;
 
@@ -182,7 +183,7 @@ public class PlayerController implements ActionListener, MouseListener {
 			// System.out.println(uri.toString());
 
 			HttpGet httpGet = new HttpGet(uri);
-			httpGet.setHeader("Accept", "text/plain");
+			httpGet.setHeader("Accept", "application/xml");
 
 			httpClient = HttpClients.createDefault();
 			httpResponse = httpClient.execute(httpGet);
@@ -191,7 +192,57 @@ public class PlayerController implements ActionListener, MouseListener {
 
 			text = EntityUtils.toString(entity);
 
-			view.getDebuggerConsoleArea().setText("Getting All Players...\n"+text);
+			PlayerXMLParser playerXMLParser = null;
+			List<Player> playersList = new PlayerXMLParser().startParsing(text);
+
+			view.getDebuggerConsoleArea().setText("------------------------------------\n");
+
+			for (Player p : playersList) {
+				view.getDebuggerConsoleArea()
+						.append("Player ID: " + p.getPlayer_id() + "\nPlayer Name: " + p.getName() + "\nPlayer Age: "
+								+ p.getAge() + "\nPlayer Gender: " + p.getGender() + "\nPlayer Nationality: "
+								+ p.getNationality() + "\nPlayer Club: " + p.getClub() + "\nPlayer App.: "
+								+ p.getAppearances() + "\nPlayer Goals: " + p.getGoals() + "\nPlayer Assists: "
+								+ p.getAssists() + "\n------------------------------------\n");
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	public void viewPlayerByID(int id) {
+		CloseableHttpClient httpClient = null;
+		CloseableHttpResponse httpResponse = null;
+
+		String text;
+		try {
+			URI uri = new URIBuilder().setScheme("http").setHost("localhost").setPort(8080)
+					.setPath("/a00273758.mehadnadeem/rest/players/view/" + id).build();
+			// System.out.println(uri.toString());
+
+			HttpGet httpGet = new HttpGet(uri);
+			httpGet.setHeader("Accept", "application/xml");
+
+			httpClient = HttpClients.createDefault();
+			httpResponse = httpClient.execute(httpGet);
+
+			HttpEntity entity = httpResponse.getEntity();
+
+			text = EntityUtils.toString(entity);
+			System.out.println(text);
+
+			PlayerXMLParser playerXMLParser = null;
+			Player player = new PlayerXMLParser().startParsing2(text);
+
+			view.getDebuggerConsoleArea().setText("------------------------------------\n");
+
+			view.getDebuggerConsoleArea()
+					.append("Player ID: " + player.getPlayer_id() + "\nPlayer Name: " + player.getName()
+							+ "\nPlayer Age: " + player.getAge() + "\nPlayer Gender: " + player.getGender()
+							+ "\nPlayer Nationality: " + player.getNationality() + "\nPlayer Club: " + player.getClub()
+							+ "\nPlayer App.: " + player.getAppearances() + "\nPlayer Goals: " + player.getGoals()
+							+ "\nPlayer Assists: " + player.getAssists() + "\n------------------------------------\n");
 
 		} catch (Exception ex) {
 			ex.printStackTrace();

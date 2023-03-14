@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.table.DefaultTableModel;
 
@@ -104,13 +106,12 @@ public enum PlayerDAO {
 
 	// ----------VIEW FUNCTIONALITY----------\\
 
-	// These view functions will be used to display information in a text area
-	// rather than in table
-	public String viewAllPlayers() {
-		StringBuilder viewAllString = new StringBuilder();
-
-		startDBConnection();
+	public List<Player> viewAllPlayers()
+	{
+		List<Player> players = new ArrayList<Player>();
+		Player p = null;
 		
+		startDBConnection();
 		String query = "select player_id, name, age, gender, nationality, club, appearances, goals, assists from players;";
 		try {
 			statement = connection.createStatement();
@@ -125,35 +126,94 @@ public enum PlayerDAO {
 //				System.out.println("Query was not successfull");
 			
 			while (resultSet.next()) {
-				viewAllString.append(resultSet.getString("name")).append("\n");
+				p = new Player();
+				p.setPlayer_id(resultSet.getInt("player_id"));
+				p.setName(resultSet.getString("name"));
+				p.setAge(resultSet.getInt("age"));
+				p.setGender(resultSet.getString("gender").charAt(0));
+				p.setNationality(resultSet.getString("nationality"));
+				p.setClub(resultSet.getString("club"));
+				p.setAppearances(resultSet.getInt("appearances"));
+				p.setGoals(resultSet.getInt("goals"));
+				p.setAssists(resultSet.getInt("assists"));
+				
+				players.add(p);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			endDBConnection();
 		}
-		return viewAllString.toString();
+
+		return players;
 	}
+	
+	// These view functions will be used to display information in a text area
+	// rather than in table
+//	public String viewAllPlayers() {
+//		StringBuilder viewAllString = new StringBuilder();
+//
+//		startDBConnection();
+//		
+//		String query = "select player_id, name, age, gender, nationality, club, appearances, goals, assists from players;";
+//		try {
+//			statement = connection.createStatement();
+//
+//			resultSet = statement.executeQuery(query);
+//
+////			int sqlStatus = statement.executeUpdate(query);
+////			
+////			if(sqlStatus == 0)
+////				System.out.println("Query was successfull");
+////			else
+////				System.out.println("Query was not successfull");
+//			
+//			while (resultSet.next()) {
+//				viewAllString.append(resultSet.getString("name")).append("\n");
+//			}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} finally {
+//			endDBConnection();
+//		}
+//		return viewAllString.toString();
+//	}
 
-	public String viewPlayerByID(int id) {
-		StringBuilder viewByIDString = new StringBuilder();
-
+	public Player viewPlayerByID(int id) {
+		Player p = new Player();
+		
 		startDBConnection();
-
+		String query = "select player_id, name, age, gender, nationality, club, appearances, goals, assists from players where player_id = "+id+";";
 		try {
 			statement = connection.createStatement();
 
-			resultSet = statement.executeQuery("select * from players where player_id = " + id + ";");
+			resultSet = statement.executeQuery(query);
 
+//			int sqlStatus = statement.executeUpdate(query);
+//			
+//			if(sqlStatus == 0)
+//				System.out.println("Query was successfull");
+//			else
+//				System.out.println("Query was not successfull");
+			
 			while (resultSet.next()) {
-				viewByIDString.append(resultSet.getString("name")).append("\n");
+				p.setPlayer_id(resultSet.getInt("player_id"));
+				p.setName(resultSet.getString("name"));
+				p.setAge(resultSet.getInt("age"));
+				p.setGender(resultSet.getString("gender").charAt(0));
+				p.setNationality(resultSet.getString("nationality"));
+				p.setClub(resultSet.getString("club"));
+				p.setAppearances(resultSet.getInt("appearances"));
+				p.setGoals(resultSet.getInt("goals"));
+				p.setAssists(resultSet.getInt("assists"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			endDBConnection();
 		}
-		return viewByIDString.toString();
+
+		return p;
 	}
 
 	// ----------DELETE FUNCTIONALITY----------\\

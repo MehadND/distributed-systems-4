@@ -3,7 +3,7 @@ package player_rest;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = "book")
+@XmlRootElement(name = "player")
 
 @XmlType(propOrder = {"player_id", "name", "age", "gender", "nationality", "club", "appearances", "goals", "assists"} )
 public class Player {

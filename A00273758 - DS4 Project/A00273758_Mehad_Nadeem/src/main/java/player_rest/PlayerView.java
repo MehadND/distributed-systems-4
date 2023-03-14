@@ -1,9 +1,11 @@
 package player_rest;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -24,6 +26,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
@@ -89,7 +92,7 @@ public class PlayerView extends JFrame {
 		this.setTitle("A00273758_Mehad_Nadeem - DS4 Project");
 		this.setResizable(false);
 		this.setLayout(mainLayout);
-		this.setSize(1200, 900);
+		this.setSize(1000, 900);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 
@@ -108,35 +111,50 @@ public class PlayerView extends JFrame {
 		debuggerPanelSetup();
 
 		// setup contentPane UI
-		mainLayoutConstraints.fill = GridBagConstraints.HORIZONTAL;
-		// int y = 0;
-
+		JLabel headingLabel = new JLabel("DS4 REST PROJECT", SwingConstants.CENTER);
+		Font f = new Font("Monospace", Font.BOLD, 32);
+		headingLabel.setFont(f);
+		headingLabel.setForeground(new Color(0.1f, 0.8f, 0.5f));
+		
 		mainLayoutConstraints.gridx = 0;
 		mainLayoutConstraints.gridy = 0;
+		mainLayoutConstraints.gridwidth = 2;
+		//mainLayoutConstraints.anchor = mainLayoutConstraints.CENTER;
+		mainLayoutConstraints.insets = new Insets(20, 0, 40, 0);
+		mainLayout.setConstraints(headingLabel, mainLayoutConstraints);
+		contentPane.add(headingLabel);
+		// int y = 0;
+
+		mainLayoutConstraints.fill = GridBagConstraints.HORIZONTAL;
+		mainLayoutConstraints.gridx = 0;
+		mainLayoutConstraints.gridy = 1;
+		mainLayoutConstraints.gridwidth = 2;
+		mainLayoutConstraints.insets = new Insets(0, 0, 0, 0);
 		mainLayout.setConstraints(crudButtonsPanel, mainLayoutConstraints);
 		contentPane.add(crudButtonsPanel);
 
 		// y++;
+		mainLayoutConstraints.gridwidth = 1;
 
 		mainLayoutConstraints.gridx = 0;
-		mainLayoutConstraints.gridy = 1;
+		mainLayoutConstraints.gridy = 2;
 		mainLayout.setConstraints(inputFieldsPanel, mainLayoutConstraints);
 		contentPane.add(inputFieldsPanel);
 
 		mainLayoutConstraints.gridx = 1;
-		mainLayoutConstraints.gridy = 1;
+		mainLayoutConstraints.gridy = 2;
 		mainLayout.setConstraints(debuggerPanel , mainLayoutConstraints);
 		contentPane.add(debuggerPanel );
 
 		// y++;
 
 		mainLayoutConstraints.gridx = 0;
-		mainLayoutConstraints.gridy = 2;
+		mainLayoutConstraints.gridy = 3;
 		mainLayoutConstraints.gridwidth = 2;
 		mainLayoutConstraints.insets = new Insets(20, 0, 0, 0);
 		mainLayout.setConstraints(bottomPanel, mainLayoutConstraints);
 		contentPane.add(bottomPanel);
-
+		
 		this.setVisible(true);
 	}
 
@@ -150,12 +168,12 @@ public class PlayerView extends JFrame {
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.ipady = 10;
+		gbc.insets = new Insets(10, 0, 0, 20);
 
 		int y = 0;
 
 		gbc.gridx = 0;
 		gbc.gridy = y;
-		gbc.insets = new Insets(30, 0, 10, 0);
 		layout.setConstraints(playerIDLabel, gbc);
 		inputFieldsPanel.add(playerIDLabel);
 
@@ -164,7 +182,6 @@ public class PlayerView extends JFrame {
 		layout.setConstraints(playerIDTextField, gbc);
 		inputFieldsPanel.add(playerIDTextField);
 
-		gbc.insets = new Insets(0, 0, 10, 0);
 		y++;
 
 		gbc.gridx = 0;
@@ -306,8 +323,9 @@ public class PlayerView extends JFrame {
 		scroll = new JScrollPane (debuggerConsoleArea, 
 				   JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
-		scroll.setPreferredSize(new Dimension(400, 200));
+		scroll.setPreferredSize(new Dimension(400, 350));
 		
+		debuggerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 25));
 		debuggerPanel.add(scroll);
 	}
 
@@ -318,7 +336,7 @@ public class PlayerView extends JFrame {
 
 	public void dbPanelSetup() {
 		// setup DB panel
-		scrollPane.setPreferredSize(new Dimension(400, 250));
+		scrollPane.setPreferredSize(new Dimension(800, 250));
 		bottomPanel.setLayout(new FlowLayout());
 		bottomPanel.add(scrollPane);
 		// dbPanel.add(viewArea);
@@ -342,6 +360,8 @@ public class PlayerView extends JFrame {
 		playerAppearancesTextField.setText("");
 		playerGoalsTextField.setText("");
 		playerAssistsTextField.setText("");
+		
+		debuggerConsoleArea.setText("");
 	}
 	
 	// ----------GETTERS + SETTERS----------\\
