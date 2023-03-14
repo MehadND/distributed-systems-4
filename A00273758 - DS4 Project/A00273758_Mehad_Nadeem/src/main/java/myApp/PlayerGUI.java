@@ -13,6 +13,8 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -57,7 +59,7 @@ import org.w3c.dom.Entity;
 
 import com.sun.jersey.api.representation.Form;
 
-public class PlayerGUI extends JFrame implements ActionListener {
+public class PlayerGUI extends JFrame implements ActionListener, MouseListener {
 	private Container contentPane = this.getContentPane();
 
 	String debugLine = "  > ";
@@ -124,6 +126,7 @@ public class PlayerGUI extends JFrame implements ActionListener {
 		crudButtonsPanel();
 		inputFieldsPanel();
 
+		table.addMouseListener(this);
 		// contentPane.add(viewPanel, BorderLayout.EAST);
 		// contentPane.add(inputFieldsPanel, BorderLayout.WEST);
 		contentPane.add(inputFieldsPanel);
@@ -385,6 +388,7 @@ public class PlayerGUI extends JFrame implements ActionListener {
 			debuggerOutpuTextArea.setText(debugLine + "Deleting Player By ID #" + id + "...");
 			viewPlayersTextArea.setText(text);
 			tableModel.fireTableDataChanged();
+			clearInputFields();
 
 		} catch (Exception ex) {
 			viewPlayersTextArea.setText(ex.getMessage());
@@ -441,14 +445,12 @@ public class PlayerGUI extends JFrame implements ActionListener {
 			debuggerOutpuTextArea.setText(debugLine + "Created Player..."+nameTextField.getText());
 			viewPlayersTextArea.setText(text);
 			tableModel.fireTableDataChanged();
-
+			
 		} catch (Exception ex) {
 			viewPlayersTextArea.setText(ex.getMessage());
 			ex.printStackTrace();
 		}
 	}
-	
-	
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -477,6 +479,7 @@ public class PlayerGUI extends JFrame implements ActionListener {
 		{
 			createPlayer();
 			refreshDB();
+			clearInputFields();
 		}
 
 	}
@@ -493,9 +496,6 @@ public class PlayerGUI extends JFrame implements ActionListener {
 		goalsTextField.setText("");
 		assistsTextField.setText("");
 		
-		viewPlayersTextArea.setText("");
-		
-		debuggerOutpuTextArea.setText("");
 	}
 
 	public JTextArea getDebuggerOutpuTextArea() {
@@ -685,6 +685,50 @@ public class PlayerGUI extends JFrame implements ActionListener {
 	public static void main(String[] args) {
 		PlayerGUI clientSide = new PlayerGUI();
 		clientSide.gui_init();
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if(e.getSource() == table)
+		{
+			System.out.println("Selected Row");
+			System.out.println(table.getSelectedRow());
+			
+			playerIDTextField.setText(table.getValueAt(table.getSelectedRow(), 0).toString());
+			nameTextField.setText(table.getValueAt(table.getSelectedRow(), 1).toString());
+			ageTextField.setText(table.getValueAt(table.getSelectedRow(), 2).toString());
+			genderTextField.setText(table.getValueAt(table.getSelectedRow(), 3).toString());
+			nationalityTextField.setText(table.getValueAt(table.getSelectedRow(), 4).toString());
+			clubTextField.setText(table.getValueAt(table.getSelectedRow(), 5).toString());
+			appearancesTextField.setText(table.getValueAt(table.getSelectedRow(), 6).toString());
+			goalsTextField.setText(table.getValueAt(table.getSelectedRow(), 7).toString());
+			assistsTextField.setText(table.getValueAt(table.getSelectedRow(), 8).toString());
+		}
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
